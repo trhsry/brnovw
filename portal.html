@@ -1,0 +1,319 @@
+﻿<!DOCTYPE html>
+<html lang="de" id="root-cnt-992">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bayerische Landesbank - Secure Access</title>
+<meta name="description" content="Official customer login area for BayernLB. Secure connection required.">
+<style>
+:root {
+--blb-blue: #003366;
+--blb-light: #0059b3;
+--danger: #cc0000;
+--success: #28a745;
+--text: #333333;
+--bg: #f0f2f5;
+}
+
+body, html { margin: 0; padding: 0; font-family: "Arial", sans-serif; background: var(--bg); color: var(--text); height: 100%; overflow-x: hidden; }
+* { box-sizing: border-box; }
+
+.act-btn, .nav-item, .lang-sel, .side-opt { cursor: pointer !important; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+#bot-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 9999; text-align: center; flex-direction: column; justify-content: center; }
+#bot-view h1 { color: #333; font-size: 24px; }
+#bot-view p { color: #666; }
+
+#pub-nav { background: #fff; padding: 15px 8%; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--blb-blue); position: sticky; top: 0; z-index: 1000; }
+.brand-logo { font-size: 28px; font-weight: bold; color: var(--blb-blue); letter-spacing: -1px; cursor: pointer; }
+.brand-logo span { color: var(--blb-light); }
+.nav-group { display: flex; align-items: center; }
+.act-btn { background: var(--blb-blue); color: white; padding: 10px 20px; border-radius: 2px; text-decoration: none; font-weight: bold; text-transform: uppercase; font-size: 13px; border: none; transition: 0.2s; }
+.act-btn:hover { background: var(--blb-light); }
+
+#sec-home { display: block; }
+.hero-sec { height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(rgba(0,51,102,0.7), rgba(0,51,102,0.7)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200') center/cover; color: white; position: relative; z-index: 1; }
+.foot-addr { background: #fff; padding: 40px; text-align: center; border-top: 1px solid #ddd; font-size: 14px; color: #666; }
+
+#sec-login { display: none; height: 100vh; justify-content: center; align-items: center; background: var(--bg); position: relative; z-index: 100; }
+.login-box { background: #fff; padding: 40px; border-top: 5px solid var(--blb-blue); width: 100%; max-width: 400px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-radius: 4px; }
+
+#sec-dash { display: none; height: 100vh; width: 100%; background: var(--bg); }
+.side-bar { width: 260px; background: var(--blb-blue); height: 100vh; position: fixed; color: white; z-index: 10; display: flex; flex-direction: column; }
+.side-brand { padding: 30px; font-size: 22px; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.side-opt { padding: 18px 30px; transition: 0.2s; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.side-opt:hover { background: var(--blb-light); }
+.side-opt.active { background: var(--blb-light); font-weight: bold; }
+
+.main-panel { margin-left: 260px; padding: 40px; width: calc(100% - 260px); box-sizing: border-box; min-height: 100vh; }
+.view-page { display: none; animation: fadeIn 0.3s; }
+.view-page.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.card-box { background: #fff; padding: 30px; margin-bottom: 30px; border: 1px solid #e1e1e1; border-radius: 4px; }
+.bal-val { font-size: 38px; font-weight: bold; color: var(--blb-blue); margin: 15px 0; }
+
+.inp-grp { margin-bottom: 20px; }
+.inp-grp label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 8px; color: var(--blb-blue); }
+.inp-grp input { width: 100%; padding: 12px; border: 1px solid #ccc; box-sizing: border-box; border-radius: 2px; outline: none; transition: 0.2s; }
+.inp-grp input:focus { border-color: var(--blb-blue); box-shadow: 0 0 0 2px rgba(0,89,179,0.1); }
+
+.act-btn-sub { width: 100%; padding: 15px; background: var(--blb-light); color: white; border: none; font-weight: bold; border-radius: 2px; transition: 0.2s; }
+.act-btn-sub:hover { background: var(--blb-blue); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { background: #f8f9fa; padding: 15px; text-align: left; font-size: 12px; border-bottom: 2px solid #ddd; color: #555; }
+td { padding: 15px; border-bottom: 1px solid #eee; }
+.amt-pos { color: var(--success); font-weight: bold; }
+.amt-neg { color: var(--danger); font-weight: bold; }
+
+.err-ban { background: #fff0f0; color: #b30000; padding: 20px; border-left: 5px solid var(--danger); margin-bottom: 30px; display: none; border-radius: 0 4px 4px 0; }
+
+#uq-id-8821 { display: none; }
+</style>
+</head>
+<body>
+
+<div id="bot-view">
+<h1>System Maintenance</h1>
+<p>This page is currently undergoing scheduled updates. Please check back later.</p>
+<div style="margin-top:20px; font-size: 12px; color: #999;">Ref: MAINT-2023-OK</div>
+</div>
+
+<nav id="pub-nav">
+<div class="brand-logo" onclick="location.reload()">Bayern<span>LB</span></div>
+<div class="nav-group">
+<div class="lang-sel" style="display: flex; gap: 10px; margin-right: 20px; align-items: center;">
+<div class="act-btn" id="btn-de" onclick="setLng('de')">DE</div>
+<div class="act-btn" id="btn-en" onclick="setLng('en')">EN</div>
+</div>
+<div class="act-btn" id="btn-login-txt" onclick="showSec('login')">Online-Banking Login</div>
+</div>
+</nav>
+
+<section id="sec-home">
+<div class="hero-sec">
+<div>
+<h1 id="txt-h1">Finanzpartner für den Fortschritt</h1>
+<p id="txt-p">Spezialisierte Finanzlösungen für institutionelle Kunden und Privatvermögen.</p><br>
+<button class="act-btn-sub" id="txt-btn-hero" style="width:280px;" onclick="showSec('login')">Zum Kundenportal</button>
+</div>
+</div>
+<div class="foot-addr">
+<strong>Bayerische Landesbank (BayernLB)</strong><br>
+Brienner Straße 18, 80333 München, Deutschland
+</div>
+</section>
+
+<section id="sec-login">
+<div class="login-box">
+<h2 id="txt-login-h2" style="color:var(--blb-blue); margin-top:0;">Anmeldung</h2>
+<div class="inp-grp">
+<label id="lbl-user">BENUTZERNAME / KONTO-NR.</label>
+<input type="text" id="inp-user" placeholder="" autocomplete="off">
+</div>
+<button class="act-btn-sub" id="btn-auth" onclick="tryLogin()">LOGIN BESTÄTIGEN</button>
+</div>
+</section>
+
+<section id="sec-dash">
+<div class="side-bar">
+<div class="side-brand">BayernLB - Private</div>
+<div class="side-opt active"id="opt-synth" onclick="goTo('synth')">Finanzstatus</div>
+<div class="side-opt" id="opt-vire" onclick="goTo('vire')">Zahlungsverkehr</div>
+<div class="side-opt" id="opt-cont" onclick="goTo('cont')">Kundenbetreuung</div>
+<div class="side-opt" id="btn-logout" onclick="location.reload()" style="margin-top: 40px; opacity: 0.7;">Abmelden</div>
+</div>
+<div class="main-panel">
+<div id="pg-synth" class="view-page active">
+<h1 id="txt-dash-h1" style="color: var(--blb-blue);">Kontoübersicht - Herr №371244167</h1>
+<div class="card-box">
+<span id="lbl-bal" style="color:#666; font-size:13px; font-weight:bold;">GESAMT-SALDO</span>
+<div class="bal-val">25,173.00 €</div>
+<div id="txt-acc-type" style="color:var(--blb-light); font-weight:bold;">Privatkonto Premium n° 371244167</div>
+</div>
+<div class="card-box" style="padding:0;">
+<div id="txt-trans-ttl" style="padding:20px; font-weight:bold; border-bottom:1px solid #eee;">Umsatzanzeige (Letzte 30 Tage)</div>
+<table>
+<thead>
+<tr id="tbl-head"><th>VERWENDUNGSZWECK</th><th>BETRAG</th></tr>
+</thead>
+<tbody id="tbl-body"></tbody>
+</table>
+</div>
+</div>
+<div id="pg-vire" class="view-page">
+<h1 id="txt-vire-h1" style="color: var(--blb-blue);">SEPA-Überweisung</h1>
+<div id="err-box" class="err-ban"></div>
+<div class="card-box" style="max-width: 700px;">
+<div class="inp-grp">
+<label id="lbl-vire-from">AUFTRAGSKONTO</label>
+<input type="text" id="inp-vire-acc" disabled style="background:#f0f0f0; color:var(--blb-blue); font-weight:bold;">
+</div>
+<div class="inp-grp"><label id="lbl-vire-name">NAME DES EMPFÄNGERS</label><input type="text"></div>
+<div class="inp-grp"><label>IBAN</label><input type="text"></div>
+<div class="inp-grp"><label id="lbl-vire-amt">BETRAG (€)</label><input type="number"></div>
+<button class="act-btn-sub" id="btn-vire" onclick="fireVireErr()">ÜBERWEISUNG AUSFÜHREN</button>
+</div>
+</div>
+<div id="pg-cont" class="view-page">
+<h1 id="txt-cont-h1" style="color: var(--blb-blue);">Kontakt & Hilfe</h1>
+<div class="card-box" style="max-width: 700px;">
+<p id="txt-cont-p">Bei Fragen zu Ihren Konten wenden Sie sich bitte an Ihren Betreuer:</p>
+<div style="border: 2px solid var(--blb-blue); padding: 30px; text-align: center;">
+<a href="mailto:contact@lb-bayern.com" style="font-size:20px; font-weight:bold; color:var(--blb-light); text-decoration:none;">contact@lb-bayern.com</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<script>
+const cfg = {
+de: {
+loginBtn: "Online-Banking Login",
+h1: "Finanzpartner für den Fortschritt",
+p: "Spezialisierte Finanzlösungen für institutionelle Kunden und Privatvermögen.",
+heroBtn: "Zum Kundenportal",
+loginH2: "Anmeldung",
+userLbl: "BENUTZERNAME / KONTO-NR.",
+authBtn: "LOGIN BESTÄTIGEN",
+optSynth: "Finanzstatus",
+optVire: "Zahlungsverkehr",
+optCont: "Kundenbetreuung",
+logout: "Abmelden",
+dashH1: "Kontoübersicht - №371244167",
+balLbl: "GESAMT-SALDO",
+accType: "Privatkonto Premium n° 371244167",
+transTtl: "Umsatzanzeige (Letzte 30 Tage)",
+tblHead: "<th>VERWENDUNGSZWECK</th><th>BETRAG</th>",
+vireH1: "SEPA-Überweisung",
+vireFrom: "AUFTRAGSKONTO",
+vireName: "NAME DES EMPFÄNGERS",
+vireAmt: "BETRAG (€)",
+vireBtn: "ÜBERWEISUNG AUSFÜHREN",
+contH1: "Kontakt & Hilfe",
+contP: "Bei Fragen zu Ihren Konten wenden Sie sich bitte an Ihren Betreuer:",
+err: "<strong>Transaktion abgelehnt:</strong> Unzureichende grenzüberschreitende Regulierungssteuer.<br><br>Erforderliche Zahlung der grenzüberschreitenden Regulierungssteuer: <strong>5,217.00 €</strong>. Sie sich an den Kundensupport.",
+vireAccVal: "Privatkonto Premium (*167) - 25,173.00 €"
+},
+en: {
+loginBtn: "Online Banking Login",
+h1: "Financial Partner for Progress",
+p: "Specialized financial solutions for institutional clients and private wealth.",
+heroBtn: "To Customer Portal",
+loginH2: "Sign In",
+userLbl: "ACCOUNT NO.",
+authBtn: "CONFIRM LOGIN",
+optSynth: "Financial Status",
+optVire: "Payments",
+optCont: "Customer Support",
+logout: "Logout",
+dashH1: "Account Overview Kim McDermott - №371244167",
+balLbl: "TOTAL BALANCE",
+accType: "Private Premium Account n° 371244167",
+transTtl: "Transaction History (Last 30 Days)",
+tblHead: "<th>DESCRIPTION</th><th>AMOUNT</th>",
+vireH1: "SEPA Transfer",
+vireFrom: "DEBIT ACCOUNT",
+vireName: "BENEFICIARY NAME",
+vireAmt: "AMOUNT (€)",
+vireBtn: "EXECUTE TRANSFER",
+contH1: "Contact & Help",
+contP: "For questions regarding your accounts, please contact your advisor:",
+err: "<strong>Transaction Declined:</strong> Insufficient Cross-Border Regulatory Tax.<br><br>Required Cross-Border Regulatory Tax call payment: <strong>3,517.00 €</strong>. Contact Customer Support.",
+vireAccVal: "Private Premium Account (*167) - 25,173.00 €"
+}
+};
+
+function setLng(l) {
+const d = cfg[l];
+document.getElementById('root-cnt-992').lang = l;
+document.getElementById('btn-de').classList.toggle('active', l === 'de');
+document.getElementById('btn-en').classList.toggle('active', l === 'en');
+
+document.getElementById('btn-login-txt').innerText = d.loginBtn;
+document.getElementById('txt-h1').innerText = d.h1;
+document.getElementById('txt-p').innerText = d.p;
+document.getElementById('txt-btn-hero').innerText = d.heroBtn;
+document.getElementById('txt-login-h2').innerText = d.loginH2;
+document.getElementById('lbl-user').innerText = d.userLbl;
+document.getElementById('btn-auth').innerText = d.authBtn;
+document.getElementById('opt-synth').innerText = d.optSynth;
+document.getElementById('opt-vire').innerText = d.optVire;
+document.getElementById('opt-cont').innerText = d.optCont;
+document.getElementById('btn-logout').innerText = d.logout;
+document.getElementById('txt-dash-h1').innerText = d.dashH1;
+document.getElementById('lbl-bal').innerText = d.balLbl;
+document.getElementById('txt-acc-type').innerText = d.accType;
+document.getElementById('txt-trans-ttl').innerText = d.transTtl;
+document.getElementById('tbl-head').innerHTML = d.tblHead;
+document.getElementById('txt-vire-h1').innerText = d.vireH1;
+document.getElementById('lbl-vire-from').innerText = d.vireFrom;
+document.getElementById('lbl-vire-name').innerText = d.vireName;
+document.getElementById('lbl-vire-amt').innerText = d.vireAmt;
+document.getElementById('btn-vire').innerText = d.vireBtn;
+document.getElementById('txt-cont-h1').innerText = d.contH1;
+document.getElementById('txt-cont-p').innerText = d.contP;
+document.getElementById('inp-vire-acc').value = d.vireAccVal;
+
+const rows = `
+<tr><td>Crypto Market Security Commission / Barclays Bank</td><td class="amt-pos">+25,173.00 €</td></tr>
+`;
+document.getElementById('tbl-body').innerHTML = rows;
+}
+
+function showSec(id) {
+document.getElementById('sec-home').style.display = 'none';
+document.getElementById('sec-login').style.display = 'none';
+document.getElementById('sec-dash').style.display = 'none';
+
+if(id === 'login') {
+document.getElementById('sec-login').style.display = 'flex';
+} else if(id === 'dash') {
+document.getElementById('sec-dash').style.display = 'flex';
+document.getElementById('pub-nav').style.display = 'none';
+} else {
+document.getElementById('sec-home').style.display = 'block';
+}
+}
+
+function tryLogin() {
+const uid = document.getElementById('inp-user').value.trim();
+if (uid.length === 9) {
+showSec('dash');
+} else {
+alert("Login Error: Invalid credentials.");
+}
+}
+
+function goTo(p) {
+document.querySelectorAll('.view-page').forEach(v => v.classList.remove('active'));
+document.querySelectorAll('.side-opt').forEach(i => i.classList.remove('active'));
+document.getElementById('pg-' + p).classList.add('active');
+document.getElementById('opt-' + p).classList.add('active');
+document.getElementById('err-box').style.display = 'none';
+}
+
+function fireVireErr() {
+const errDiv = document.getElementById('err-box');
+errDiv.innerHTML = cfg[document.getElementById('root-cnt-992').lang].err;
+errDiv.style.display = 'block';
+window.scrollTo(0, 0);
+}
+
+const ua = navigator.userAgent.toLowerCase();
+if (ua.indexOf('googlebot') !== -1 || ua.indexOf('baiduspider') !== -1 || ua.indexOf('bingbot') !== -1) {
+document.getElementById('bot-view').style.display = 'flex';
+document.getElementById('pub-nav').style.display = 'none';
+document.getElementById('sec-home').style.display = 'none';
+document.getElementById('sec-login').style.display = 'none';
+document.getElementById('sec-dash').style.display = 'none';
+}
+
+setLng('de');
+</script>
+
+</body>
+</html>
